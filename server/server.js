@@ -1,7 +1,7 @@
 const http = require('http');
 const App = require('./app');
-const setupWebSocket = require('./src/config/websocket');
-const Database = require('./src/config/database');
+const setupWebSocket = require('./config/websocket');
+const Database = require('./config/database');
 
 class Server {
   constructor() {

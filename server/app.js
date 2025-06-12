@@ -3,12 +3,12 @@ const cors = require('cors');
 require('dotenv').config();
 
 // Import configurations
-const Database = require('./src/config/database');
-const setupRoutes = require('./src/routes');
+const Database = require('./config/database');
+const setupRoutes = require('./routes');
 
 // Import services and controllers
-const { GameService, BettingService } = require('./src/services');
-const { GameController, UserController } = require('./src/controllers');
+const { GameService, BettingService } = require('./services');
+const { GameController, UserController } = require('./controllers');
 
 class App {
   constructor() {
