@@ -19,6 +19,8 @@ const GameResultSchema = new mongoose.Schema({
   timestamps: true
 });
 
+GameResultSchema.index({ createdAt: -1 });
+
 // Static methods
 GameResultSchema.statics.getRecentHistory = function(limit = 50) {
   return this.find()
@@ -37,6 +39,32 @@ GameResultSchema.statics.getGameStats = function() {
       }
     }
   ]);
+};
+
+GameResultSchema.statics.getUserGameHistory = function(userId) {
+  if (!userId) throw new Error("userId is required to get game histrory for the user");
+  
+  try {
+    return this.aggregate([
+    { $match: { 'bets.playerId': userId } },
+    {
+      $project: {
+        round: 1,
+        result: 1,
+        createdAt: 1,
+        bets: {
+          $filter: {
+            input: '$bets',
+            as: 'bet',
+            cond: { $eq: ['$$bet.playerId', userId] }
+          }
+        }
+      }
+    }
+  ]); 
+  } catch (error) {
+    throw new Error(`failed to fetch user game history: ${error.message}`);
+  }
 };
 
 module.exports = mongoose.model('GameResult', GameResultSchema);
