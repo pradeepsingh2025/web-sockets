@@ -1,9 +1,11 @@
 const { 
-  generateUserId
+  generateUserId,
+  errorResponse,
+  successResponse
 } = require("../utils/Helpers")
-
 const User = require("../models/User");
 const { generateToken } = require("../utils/jwt");
+const { validationResult } = require("express-validator");
 
 
 async function createUser(req, res) {
@@ -78,7 +80,43 @@ async function createUser(req, res) {
     }
   }
 
+  const getUser = async (req, res) => {
+  try {
+    const { phone, password } = req.body;
+
+    // Validation
+    if (!phone || !password) {
+      return res.status(400).json({ 
+        error: 'Email and password are required' 
+      });
+    }
+
+    // Find user
+    const user = await User.findOne({ phone });
+     if (!user) {
+        return errorResponse(res, 'User not found', 404);
+      }
+
+    // Check password
+    const isPasswordCorrect = await user.comparePassword(password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ 
+        error: 'Invalid password' 
+      });
+    }
+
+    // Generate JWT token
+    const token = generateToken(user.userId);
+
+    return successResponse(res, 'Profile fetched successfully', { token, user })
+
+  } catch (error) {
+    return errorResponse(res, error.message, 500);
+  }
+};
+
 
   module.exports = {
-    createUser
+    createUser,
+    getUser
   }

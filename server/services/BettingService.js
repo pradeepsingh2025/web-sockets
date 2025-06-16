@@ -1,25 +1,16 @@
 const { User } = require('../models');
 
 class BettingService {
-  async getUserBalance(userId) {
-    const user = await User.findOne({ userId });
-    return user ? user.balance : 1000;
-  }
 
   async getUserStats(userId) {
     const user = await User.findOne({ userId });
     
     if (!user) {
-      return {
-        balance: 1000,
-        totalBets: 0,
-        totalWins: 0,
-        winRate: 0
-      };
+      throw new Error('User not found');
     }
     
     return {
-      balance: user.balance,
+      balance: user.wallet.balance,
       totalBets: user.totalBets,
       totalWins: user.totalWins,
       winRate: parseFloat(user.getWinRate())

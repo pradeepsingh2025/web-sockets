@@ -1,9 +1,4 @@
 const User = require("../models/User");
-const {
-  successResponse,
-  errorResponse,
-} = require("../utils/Helpers");
-const { validationResult } = require("express-validator");
 
 class UserController {
   constructor(bettingService) {
@@ -21,16 +16,6 @@ class UserController {
     }
   }
 
-  async getUserBalance(req, res) {
-    try {
-      const userId = req.user;
-      const balance = await this.bettingService.getUserBalance(userId);
-      res.json({ balance });
-    } catch (error) {
-      console.error("Error fetching user balance:", error);
-      res.status(500).json({ error: "Failed to fetch user balance" });
-    }
-  }
 }
 
 module.exports = UserController;
