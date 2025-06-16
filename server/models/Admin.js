@@ -39,6 +39,5 @@ const adminSchema = new mongoose.Schema({
   timestamps: true
 });
 
-adminSchema.index({ email: 1 });
 
 module.exports = mongoose.model('Admin', adminSchema);

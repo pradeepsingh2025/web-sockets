@@ -1,3 +1,11 @@
+const { 
+  generateUserId
+} = require("../utils/Helpers")
+
+const User = require("../models/User");
+const { generateToken } = require("../utils/jwt");
+
+
 async function createUser(req, res) {
     try {
       const userId = generateUserId();
@@ -17,7 +25,7 @@ async function createUser(req, res) {
       }
 
       const phoneRegex = /^[6-9]\d{9}$/;
-      if (!phoneRegex.test(phoneNumber)) {
+      if (!phoneRegex.test(phone)) {
         return res.status(400).json({
           error: "Please enter a valid 10-digit phone number",
         });

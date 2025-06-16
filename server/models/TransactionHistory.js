@@ -5,19 +5,16 @@ const transactionHistorySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Transaction',
     required: true,
-    index: true
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    index: true
   },
   //how OrderId will be created:- it will decide on the time of creation a document of the model
   orderId: {
     type: String,
     required: true,
-    index: true
   },
   type: {
     type: String,

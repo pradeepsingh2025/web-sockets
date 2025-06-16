@@ -2,10 +2,8 @@ const User = require("../models/User");
 const {
   successResponse,
   errorResponse,
-  generateUserId,
-} = require("../utils/helpers");
+} = require("../utils/Helpers");
 const { validationResult } = require("express-validator");
-const { generateToken } = require("../utils/jwt");
 
 class UserController {
   constructor(bettingService) {
