@@ -7,7 +7,7 @@ const Database = require('./config/database');
 const setupRoutes = require('./routes');
 
 // Import services and controllers
-const { GameService, BettingService } = require('./services');
+const { GameService, BettingService} = require('./services');
 const { GameController, UserController } = require('./controllers');
 
 class App {

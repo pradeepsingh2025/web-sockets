@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const authenticateToken = require("../middlewares/userAuth")
 
 function createUserRoutes(userController) {
-  router.get('/:userId/stats', userController.getUserStats.bind(userController));
-  router.get('/:userId/balance', userController.getUserBalance.bind(userController));
+  router.get('/stats', authenticateToken, userController.getUserStats.bind(userController));
+  router.get('/balance', authenticateToken, userController.getUserBalance.bind(userController));
   
   return router;
 }
