@@ -1,16 +1,10 @@
+const { type } = require('@testing-library/user-event/dist/cjs/utility/type.js');
 const mongoose = require('mongoose');
 
 const adminSchema = new mongoose.Schema({
-  name: {
+  adminUsername:{
     type: String,
-    required: [true, 'Name is required'],
-    trim: true
-  },
-  email: {
-    type: String,
-    required: [true, 'Email is required'],
-    unique: true,
-    lowercase: true
+    required: [true, 'Admin username is required']
   },
   passwordHash: {
     type: String,
