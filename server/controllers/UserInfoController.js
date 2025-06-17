@@ -1,14 +1,14 @@
-const { 
+const {
   generateUserId,
   errorResponse,
-  successResponse
-} = require("../utils/Helpers")
+  successResponse,
+} = require("../utils/Helpers");
 const User = require("../models/User");
 const { generateToken } = require("../utils/jwt");
 const { validationResult } = require("express-validator");
 
-
-async function createUser(req, res) {
+class UserInfoController {
+  async createUser(req, res) {
     try {
       const userId = generateUserId();
       const { phone, password } = req.body;
@@ -80,43 +80,83 @@ async function createUser(req, res) {
     }
   }
 
-  const getUser = async (req, res) => {
-  try {
-    const { phone, password } = req.body;
+  async getUser(req, res) {
+    try {
+      const { phone, password } = req.body;
 
-    // Validation
-    if (!phone || !password) {
-      return res.status(400).json({ 
-        error: 'Email and password are required' 
-      });
-    }
-
-    // Find user
-    const user = await User.findOne({ phone });
-     if (!user) {
-        return errorResponse(res, 'User not found', 404);
+      // Validation
+      if (!phone || !password) {
+        return res.status(400).json({
+          error: "Email and password are required",
+        });
       }
 
-    // Check password
-    const isPasswordCorrect = await user.comparePassword(password);
-    if (!isPasswordCorrect) {
-      return res.status(401).json({ 
-        error: 'Invalid password' 
+      // Find user
+      const user = await User.findOne({ phone });
+      if (!user) {
+        return errorResponse(res, "User not found", 404);
+      }
+
+      // Check password
+      const isPasswordCorrect = await user.comparePassword(password);
+      if (!isPasswordCorrect) {
+        return res.status(401).json({
+          error: "Invalid password",
+        });
+      }
+
+      // Generate JWT token
+      const token = generateToken(user.userId);
+
+      return successResponse(res, "Profile fetched successfully", {
+        token,
+        user,
       });
+    } catch (error) {
+      return errorResponse(res, error.message, 500);
     }
-
-    // Generate JWT token
-    const token = generateToken(user.userId);
-
-    return successResponse(res, 'Profile fetched successfully', { token, user })
-
-  } catch (error) {
-    return errorResponse(res, error.message, 500);
   }
-};
 
+  static async getProfile(req, res) {
+    try {
+      const userId = req.user.userID;
+      const user = await User.findById(userId).select("-passwordHash");
 
-  module.exports = {
-    createUser,
-    getUser
+      if (!user) {
+        return errorResponse(res, "User not found", 404);
+      }
+
+      return successResponse(res, "Profile fetched successfully", { user });
+    } catch (error) {
+      return errorResponse(res, error.message, 500);
+    }
   }
+
+  static async updateProfile(req, res) {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return errorResponse(res, "Validation errors", 400, errors.array());
+      }
+
+      const userId = req.user.userId;
+      const { phone, upiId } = req.body;
+
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { phone, upiId },
+        { new: true, runValidators: true }
+      ).select("-passwordHash");
+
+      return successResponse(res, "Profile updated successfully", { user });
+    } catch (error) {
+      return errorResponse(res, error.message, 400);
+    }
+  }
+}
+
+// async function createUser(req, res) {}
+
+// const getUser = async (req, res) => {};
+
+module.exports = UserInfoController;

@@ -7,7 +7,7 @@ class UserController {
 
   async getUserStats(req, res) {
     try {
-      const userId = req.user;
+      const userId = req.user.userId;
       const stats = await this.bettingService.getUserStats(userId);
       res.json(stats);
     } catch (error) {

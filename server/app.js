@@ -1,14 +1,19 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
 
 // Import configurations
-const Database = require('./config/database');
-const setupRoutes = require('./routes');
+const Database = require("./config/database");
+const setupRoutes = require("./routes");
 
 // Import services and controllers
-const { GameService, BettingService} = require('./services');
-const { GameController, UserController } = require('./controllers');
+const { GameService, BettingService } = require("./services");
+const {
+  GameController,
+  UserController,
+  UserInfoController,
+  WalletController,
+} = require("./controllers");
 
 class App {
   constructor() {
@@ -33,19 +38,23 @@ class App {
   initializeControllers() {
     this.gameController = new GameController(this.gameService);
     this.userController = new UserController(this.bettingService);
+    this.userInfoController = new UserInfoController();
+    this.walletController = new WalletController();
   }
 
   setupRoutes() {
     setupRoutes(this.app, {
       gameController: this.gameController,
-      userController: this.userController
+      userController: this.userController,
+      userInfoController: this.userInfoController,
+      walletController: this.walletController
     });
   }
 
   setupErrorHandling() {
     this.app.use((error, req, res, next) => {
-      console.error('Server error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      console.error("Server error:", error);
+      res.status(500).json({ error: "Internal server error" });
     });
   }
 
