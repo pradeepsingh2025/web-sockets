@@ -4,8 +4,8 @@ const {
   createUserInfoRoutes,
   createWalletInfoRoutes,
 } = require("./userRoutes");
-const { body } = require("express-validator");
-const WalletController = require("../controllers");
+const createAdminRoutes = require("./adminRoutes");
+const createTransaction = require("./transactionRoutes");
 
 function setupRoutes(app, controllers) {
   const {
@@ -13,20 +13,30 @@ function setupRoutes(app, controllers) {
     userController,
     userInfoController,
     walletController,
+    adminController,
+    transactionController,
   } = controllers;
 
-  // API routes
+  // Game Routes
   app.use("/api/game", createGameRoutes(gameController));
-  app.use("/api/user", createUserBetRoutes(userController));
 
   // Health check route
   app.get("/api/health", gameController.getHealthCheck.bind(gameController));
 
-  // login/signup route
+  // User Routes
+  app.use("/api/user", createUserBetRoutes(userController));
+
+  //User login/signup route
   app.use("/api/user", createUserInfoRoutes(userInfoController));
 
   //user wallet info
   app.use("/api/user", createWalletInfoRoutes(walletController));
+
+  //admin routes
+  app.use("/api/admin", createAdminRoutes(adminController));
+
+  //transaction controller
+  app.use("/api/user", createTransaction(transactionController));
 }
 
 module.exports = setupRoutes;

@@ -1,7 +1,10 @@
 const express = require("express");
 const { body } = require("express-validator");
 const AdminController = require("../controllers/AdminController");
-const { authenticateAdmin, requirePermission } = require("../middlewares/adminAuth");
+const {
+  authenticateAdmin,
+  requirePermission,
+} = require("../middlewares/adminAuth");
 
 const router = express.Router();
 
@@ -26,39 +29,47 @@ const completeValidation = [
   body("paymentDetails.gateway").optional().notEmpty(),
 ];
 
-// Routes
-router.get(
-  "/transactions/pending",
-  authenticateAdmin,
-  requirePermission("VIEW_TRANSACTIONS"),
-  AdminController.getPendingTransactions
-);
-router.put(
-  "/transactions/:transactionId/approve",
-  authenticateAdmin,
-  requirePermission("APPROVE_DEPOSITS"),
-  approveValidation,
-  AdminController.approveTransaction
-);
-router.put(
-  "/transactions/:transactionId/complete",
-  authenticateAdmin,
-  requirePermission("APPROVE_DEPOSITS"),
-  completeValidation,
-  AdminController.completeTransaction
-);
-router.put(
-  "/transactions/:transactionId/reject",
-  authenticateAdmin,
-  requirePermission("APPROVE_DEPOSITS"),
-  rejectValidation,
-  AdminController.rejectTransaction
-);
-router.get(
-  "/transactions/stats",
-  authenticateAdmin,
-  requirePermission("VIEW_REPORTS"),
-  AdminController.getTransactionStats
-);
+function createAdminRoutes(adminController) {
+  // Routes
 
-module.exports = router;
+  router.post("/signup", adminController.createAdmin);
+  router.post("/login", adminController.getAdmin);
+
+  router.get(
+    "/transactions/pending",
+    authenticateAdmin,
+    requirePermission("VIEW_TRANSACTIONS"),
+    adminController.getPendingTransactions
+  );
+  router.put(
+    "/transactions/:transactionId/approve",
+    authenticateAdmin,
+    requirePermission("APPROVE_DEPOSITS"),
+    approveValidation,
+    adminController.approveTransaction
+  );
+  router.put(
+    "/transactions/:transactionId/complete",
+    authenticateAdmin,
+    requirePermission("APPROVE_DEPOSITS"),
+    completeValidation,
+    adminController.completeTransaction
+  );
+  router.put(
+    "/transactions/:transactionId/reject",
+    authenticateAdmin,
+    requirePermission("APPROVE_DEPOSITS"),
+    rejectValidation,
+    adminController.rejectTransaction
+  );
+  router.get(
+    "/transactions/stats",
+    authenticateAdmin,
+    requirePermission("VIEW_REPORTS"),
+    adminController.getTransactionStats
+  );
+
+  return router;
+}
+
+module.exports = createAdminRoutes;

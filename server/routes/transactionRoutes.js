@@ -1,6 +1,5 @@
 const express = require('express');
 const { body } = require('express-validator');
-const TransactionController = require('../controllers/TransactionController');
 const { authenticateUser } = require('../middlewares/userAuth');
 
 const router = express.Router()
@@ -17,10 +16,17 @@ const withdrawalValidation = [
 ];
 
 
-// Routes
-router.post('/deposit', authenticateUser, depositValidation, TransactionController.createDeposit);
-router.post('/withdrawal', authenticateUser, withdrawalValidation, TransactionController.createWithdrawal);
-router.get('/my-transactions', authenticateUser, TransactionController.getUserTransactions);
-router.get('/:orderId', authenticateUser, TransactionController.getTransactionDetails);
+function createTransaction(transactionController) {
+  
+  // Routes
+  router.post('/deposit', authenticateUser, depositValidation, transactionController.createDeposit);
+  router.post('/withdrawal', authenticateUser, withdrawalValidation, transactionController.createWithdrawal);
+  router.get('/my-transactions', authenticateUser, transactionController.getUserTransactions);
+  router.get('/:orderId', authenticateUser, transactionController.getTransactionDetails);
 
-module.exports = router;
+
+  return router;
+}
+
+
+module.exports = createTransaction;

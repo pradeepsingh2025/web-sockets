@@ -13,6 +13,8 @@ const {
   UserController,
   UserInfoController,
   WalletController,
+  AdminController,
+  TransactionController
 } = require("./controllers");
 
 class App {
@@ -33,6 +35,7 @@ class App {
   initializeServices() {
     this.gameService = new GameService();
     this.bettingService = new BettingService();
+    // got confused ki rest of the services ko init krne ki jrurat h ya nhi
   }
 
   initializeControllers() {
@@ -40,6 +43,8 @@ class App {
     this.userController = new UserController(this.bettingService);
     this.userInfoController = new UserInfoController();
     this.walletController = new WalletController();
+    this.adminController = new AdminController();
+    this.transactionController = new TransactionController();
   }
 
   setupRoutes() {
@@ -47,7 +52,9 @@ class App {
       gameController: this.gameController,
       userController: this.userController,
       userInfoController: this.userInfoController,
-      walletController: this.walletController
+      walletController: this.walletController,
+      adminController: this.adminController,
+      transactionController: this.transactionController
     });
   }
 
