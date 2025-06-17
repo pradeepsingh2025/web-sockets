@@ -11,7 +11,7 @@ const transactionHistorySchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  //how OrderId will be created:- it will decide on the time of creation a document of the model
+  //how OrderId will be created:- it will decide on the time of creation a document of this model
   orderId: {
     type: String,
     required: true,

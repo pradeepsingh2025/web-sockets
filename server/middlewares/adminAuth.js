@@ -1,22 +1,20 @@
-const jwt = require('jsonwebtoken');
-const Admin = require('../models/Admin');
-const { errorResponse } = require('../utils/Helpers');
-const config = require('../config/config');
-
+const Admin = require("../models/Admin");
+const { errorResponse } = require("../utils/Helpers");
+const { verifyToken } = require("../utils/jwt");
 
 const authenticateAdmin = async (req, res, next) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+
     if (!token) {
-      return errorResponse(res, 'Access token is required', 401);
+      return errorResponse(res, "Access token is required", 401);
     }
 
-    const decoded = jwt.verify(token, config.JWT_SECRET);
-    const admin = await Admin.findById(decoded.id).select('-passwordHash');
+    const decoded = verifyToken(token);
+    const admin = await Admin.findOne(decoded.adminName).select("-password");
 
     if (!admin || !admin.isActive) {
-      return errorResponse(res, 'Admin not found or inactive', 401);
+      return errorResponse(res, "Admin not found or inactive", 401);
     }
 
     // Update last login
@@ -26,11 +24,23 @@ const authenticateAdmin = async (req, res, next) => {
     req.admin = admin;
     next();
   } catch (error) {
-    return errorResponse(res, 'Invalid token', 401);
+    return errorResponse(res, "Invalid token", 401);
   }
 };
 
+const requirePermission = (permission) => {
+  return (req, res, next) => {
+    if (
+      !req.admin.permissions.includes(permission) &&
+      req.admin.role !== "SUPER_ADMIN"
+    ) {
+      return errorResponse(res, "Insufficient permissions", 403);
+    }
+    next();
+  };
+};
 
 module.exports = {
-    authenticateAdmin
-}
+  authenticateAdmin,
+  requirePermission
+};

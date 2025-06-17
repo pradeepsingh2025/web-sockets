@@ -1,35 +1,74 @@
 module.exports = {
   GAME_PHASES: {
-    BETTING: 'betting',
-    RESULT: 'result',
-    WAITING: 'waiting'
+    BETTING: "betting",
+    RESULT: "result",
+    WAITING: "waiting",
   },
-  
+
   BET_TYPES: {
-    COLOR: 'color',
-    NUMBER: 'number',
-    SIZE: 'size'
+    COLOR: "color",
+    NUMBER: "number",
+    SIZE: "size",
   },
-  
+
   COLORS: {
-    RED: 'red',
-    GREEN: 'green',
-    VIOLET: 'violet'
+    RED: "red",
+    GREEN: "green",
+    VIOLET: "violet",
   },
-  
+
   SIZES: {
-    BIG: 'big',
-    SMALL: 'small'
+    BIG: "big",
+    SMALL: "small",
   },
-  
+
   MULTIPLIERS: {
     COLOR: 2,
     NUMBER: 9,
-    SIZE: 1.8
+    SIZE: 1.8,
   },
-  
+
   TIMERS: {
     BETTING_PHASE: 30,
-    RESULT_PHASE: 5
-  }
+    RESULT_PHASE: 5,
+  },
+
+  TRANSACTION_STATUS: {
+    PENDING: "PENDING",
+    PROCESSING: "PROCESSING",
+    COMPLETED: "COMPLETED",
+    REJECTED: "REJECTED",
+    CANCELLED: "CANCELLED",
+  },
+
+  TRANSACTION_TYPE: {
+    DEPOSIT: "DEPOSIT",
+    WITHDRAWAL: "WITHDRAWAL",
+  },
+
+  WALLET_TRANSACTION_TYPE: {
+    CREDIT: "CREDIT",
+    DEBIT: "DEBIT",
+  },
+
+  ADMIN_ROLES: {
+    SUPER_ADMIN: "SUPER_ADMIN",
+    PAYMENT_ADMIN: "PAYMENT_ADMIN",
+    SUPPORT_ADMIN: "SUPPORT_ADMIN",
+  },
+
+  PERMISSIONS: {
+    APPROVE_DEPOSITS: "APPROVE_DEPOSITS",
+    APPROVE_WITHDRAWALS: "APPROVE_WITHDRAWALS",
+    VIEW_TRANSACTIONS: "VIEW_TRANSACTIONS",
+    MANAGE_USERS: "MANAGE_USERS",
+    VIEW_REPORTS: "VIEW_REPORTS",
+  },
+
+  HISTORY_TAGS: {
+    PROCESSING_PAYMENT: "PROCESSING_PAYMENT",
+    COMPLETED: "COMPLETED",
+    REJECTED: "REJECTED",
+    CANCELLED: "CANCELLED",
+  },
 };

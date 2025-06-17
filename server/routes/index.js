@@ -1,6 +1,8 @@
 const createGameRoutes = require("./gameRoutes");
 const createUserRoutes = require("./userRoutes");
 const { createUser, getUser } = require("../controllers");
+const { body } = require('express-validator');
+const WalletController = require('../controllers');
 
 function setupRoutes(app, controllers) {
   const { gameController, userController } = controllers;

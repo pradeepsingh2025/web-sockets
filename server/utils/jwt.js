@@ -1,9 +1,10 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production';
+const config = require("../config/config");
+const JWT_SECRET = config.JWT_SECRET;
 
 const generateToken = (userId) => {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1d' });
+  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "1d" });
 };
 
 const verifyToken = (token) => {
@@ -13,5 +14,5 @@ const verifyToken = (token) => {
 module.exports = {
   generateToken,
   verifyToken,
-  JWT_SECRET
+  JWT_SECRET,
 };

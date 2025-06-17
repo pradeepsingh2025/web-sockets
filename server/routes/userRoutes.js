@@ -1,11 +1,19 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const authenticateToken = require("../middlewares/userAuth")
+const { authenticateUser } = require("../middlewares/userAuth");
 
 function createUserRoutes(userController) {
-  router.get('/stats', authenticateToken, userController.getUserStats.bind(userController));
-  router.get('/balance', authenticateToken, userController.getUserBalance.bind(userController));
-  
+  router.get(
+    "/stats",
+    authenticateUser,
+    userController.getUserStats.bind(userController)
+  );
+  router.get(
+    "/balance",
+    authenticateUser,
+    userController.getUserBalance.bind(userController)
+  );
+
   return router;
 }
 

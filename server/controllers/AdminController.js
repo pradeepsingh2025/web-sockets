@@ -1,8 +1,73 @@
 const TransactionService = require("../services/TransactionService");
 const Transaction = require("../models/Transaction");
+const Admin = require("../models/Admin");
 const { successResponse, errorResponse } = require("../utils/Helpers");
+const { generateToken } = require("../utils/jwt");
 
 class AdminController {
+  //admin creation
+  static async createAdmin(req, res) {
+    try {
+      const { adminName, password, role, permissions } = req.body;
+
+      if (!adminName || !password) {
+        return errorResponse(res, "admin name and password are required", 400);
+      }
+
+      if (password.length < 8) {
+        return errorResponse(res, "Password must be atleast 8 character long");
+      }
+
+      const existingAdmin = await Admin.findOne({ adminName });
+      if (existingAdmin) {
+        return errorResponse(
+          res,
+          "Admin with this admin name already exists",
+          409
+        );
+      }
+
+      const admin = new Admin({ adminName, password, role, permissions });
+      await admin.save();
+
+      successResponse(res, "admin created successfully", 201);
+    } catch (error) {
+      return errorResponse(res, error.message, 500);
+    }
+  }
+
+  //admin login authentication
+
+  static async getAdmin(req, res) {
+    try {
+      const { adminName, password } = req.body;
+
+      if (!adminName || !password) {
+        errorResponse(res, "admin name and password are required", 400);
+      }
+
+      const admin = Admin.findOne({ adminName });
+      if (!admin) {
+        errorResponse(res, "admin not found", 404);
+      }
+
+      const isPasswordCorrect = await admin.comparePassword(password);
+      if (!isPasswordCorrect) {
+        return errorResponse(res, "Invalid password");
+      }
+
+      // Generate JWT token
+      const token = generateToken(admin.adminName);
+
+      return successResponse(res, "Admin logged in successfully", {
+        token,
+        admin,
+      });
+    } catch (error) {
+      return errorResponse(res, error.message, 500);
+    }
+  }
+
   static async getPendingTransactions(req, res) {
     try {
       const { type, page = 1, limit = 10 } = req.query;
@@ -111,4 +176,4 @@ class AdminController {
   }
 }
 
-module.exports = AdminController
+module.exports = AdminController;
