@@ -1,44 +1,49 @@
-const { User } = require('../models');
+const { User } = require("../models");
 
 class BettingService {
-
   async getUserStats(userId) {
     const user = await User.findOne({ userId });
-    
+
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
-    
+
     return {
       balance: user.wallet.balance,
       totalBets: user.totalBets,
       totalWins: user.totalWins,
-      winRate: parseFloat(user.getWinRate())
+      winRate: parseFloat(user.getWinRate()),
     };
   }
 
+  async getUserBalance(userId) {
+    const user = await User.findOne({ userId });
+    if (!user) throw new Error("User not found");
+    return user.wallet.balance;
+  }
+
   async updateUserBalance(playerId, betAmount, winAmount = 0) {
-    const balanceChange = winAmount > 0 ? (winAmount - betAmount) : -betAmount;
-    
+    const balanceChange = winAmount > 0 ? winAmount - betAmount : -betAmount;
+
     await User.findOneAndUpdate(
       { userId: playerId },
-      { 
-        $inc: { 
+      {
+        $inc: {
           balance: balanceChange,
           totalBets: betAmount,
-          totalWins: winAmount > 0 ? winAmount : 0
+          totalWins: winAmount > 0 ? winAmount : 0,
         },
-        lastActive: new Date()
+        lastActive: new Date(),
       },
       { upsert: true }
     );
   }
 
   async processWinnings(bets) {
-    const updatePromises = bets.map(bet => 
+    const updatePromises = bets.map((bet) =>
       this.updateUserBalance(bet.playerId, bet.amount, bet.winAmount)
     );
-    
+
     await Promise.all(updatePromises);
   }
 }

@@ -4,7 +4,7 @@ const { successResponse, errorResponse } = require('../utils/Helpers');
 const Transaction = require("../models/Transaction")
 
 class TransactionController {
-    static async createDeposit(req, res) {
+    async createDeposit(req, res) {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -34,7 +34,7 @@ class TransactionController {
     }
   }
 
-  static async createWithdrawal(req, res) {
+  async createWithdrawal(req, res) {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -64,7 +64,7 @@ class TransactionController {
     }
   }
 
-  static async getUserTransactions(req, res) {
+  async getUserTransactions(req, res) {
     try {
       const userId = req.user.id;
       const { page = 1, limit = 10, status } = req.query;
@@ -77,7 +77,7 @@ class TransactionController {
     }
   }
 
-  static async getTransactionDetails(req, res) {
+  async getTransactionDetails(req, res) {
     try {
       const { orderId } = req.params;
       const userId = req.user.id;

@@ -2,7 +2,7 @@ const WalletService = require("../services/WalletService");
 const { successResponse, errorResponse } = require("../utils/Helpers");
 
 class WalletController {
-  static async getWalletBalance(req, res) {
+  async getWalletBalance(req, res) {
     try {
       const userId = req.user.userId;
       const balance = await WalletService.getWalletBalance(userId);
@@ -15,7 +15,7 @@ class WalletController {
     }
   }
 
-  static async getHistory(req, res) {
+  async getHistory(req, res) {
     try {
       const userId = req.user.userId;
       const { page = 1, limit = 10 } = req.query;

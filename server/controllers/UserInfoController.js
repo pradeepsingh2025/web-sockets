@@ -117,7 +117,7 @@ class UserInfoController {
     }
   }
 
-  static async getProfile(req, res) {
+   async getProfile(req, res) {
     try {
       const userId = req.user.userID;
       const user = await User.findById(userId).select("-passwordHash");
@@ -132,7 +132,7 @@ class UserInfoController {
     }
   }
 
-  static async updateProfile(req, res) {
+   async updateProfile(req, res) {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {

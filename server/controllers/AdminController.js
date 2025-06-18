@@ -6,7 +6,7 @@ const { generateToken } = require("../utils/jwt");
 
 class AdminController {
   //admin creation
-  static async createAdmin(req, res) {
+  async createAdmin(req, res) {
     try {
       const { adminName, password, role, permissions } = req.body;
 
@@ -38,7 +38,7 @@ class AdminController {
 
   //admin login authentication
 
-  static async getAdmin(req, res) {
+  async getAdmin(req, res) {
     try {
       const { adminName, password } = req.body;
 
@@ -68,7 +68,7 @@ class AdminController {
     }
   }
 
-  static async getPendingTransactions(req, res) {
+  async getPendingTransactions(req, res) {
     try {
       const { type, page = 1, limit = 10 } = req.query;
 
@@ -86,7 +86,7 @@ class AdminController {
     }
   }
 
-  static async approveTransaction(req, res) {
+  async approveTransaction(req, res) {
     try {
       const { transactionId } = req.params;
       const { remarks } = req.body;
@@ -106,7 +106,7 @@ class AdminController {
     }
   }
 
-  static async completeTransaction(req, res) {
+  async completeTransaction(req, res) {
     try {
       const { transactionId } = req.params;
       const { paymentDetails } = req.body;
@@ -124,7 +124,7 @@ class AdminController {
     }
   }
 
-  static async rejectTransaction(req, res) {
+  async rejectTransaction(req, res) {
     try {
       const { transactionId } = req.params;
       const { reason } = req.body;
@@ -144,7 +144,7 @@ class AdminController {
     }
   }
 
-  static async getTransactionStats(req, res) {
+  async getTransactionStats(req, res) {
     try {
       const { startDate, endDate } = req.query;
 
