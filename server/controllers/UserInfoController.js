@@ -119,8 +119,8 @@ class UserInfoController {
 
    async getProfile(req, res) {
     try {
-      const userId = req.user.userID;
-      const user = await User.findById(userId).select("-passwordHash");
+      const userId = req.user.userId;
+      const user = await User.findOne({userId}).select("-password");
 
       if (!user) {
         return errorResponse(res, "User not found", 404);
@@ -142,11 +142,11 @@ class UserInfoController {
       const userId = req.user.userId;
       const { phone, upiId } = req.body;
 
-      const user = await User.findByIdAndUpdate(
-        userId,
+      const user = await User.findOneAndUpdate(
+        {userId},
         { phone, upiId },
         { new: true, runValidators: true }
-      ).select("-passwordHash");
+      ).select("-password");
 
       return successResponse(res, "Profile updated successfully", { user });
     } catch (error) {

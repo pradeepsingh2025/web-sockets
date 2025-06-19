@@ -181,11 +181,8 @@ class TransactionService {
 
       if (!transactions) throw new Error("no transactions found");
 
-      const total = await Transaction.countDocuments({userId});
-
       return {
-        transactions,
-        total,
+        transactions
       };
     } catch (error) {
       throw new Error("error fetching user transactions");
@@ -200,7 +197,6 @@ class TransactionService {
       .sort({ createdAt: 1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
-      .populate("userId", "name email phone");
 
     return transactions;
   }

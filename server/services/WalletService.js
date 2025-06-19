@@ -90,7 +90,7 @@ class WalletService {
   }
 
   static async getWalletBalance(userId) {
-    const user = await User.findById(userId).select('wallet');
+    const user = await User.findOne({userId}).select('wallet');
     return user ? user.wallet.balance : 0;
   }
 

@@ -5,7 +5,7 @@ const {
   createWalletInfoRoutes,
 } = require("./userRoutes");
 const createAdminRoutes = require("./adminRoutes");
-const createTransaction = require("./transactionRoutes");
+const {createTransaction, searchTransactionById} = require("./transactionRoutes");
 
 function setupRoutes(app, controllers) {
   const {
@@ -34,6 +34,7 @@ function setupRoutes(app, controllers) {
 
   //admin routes
   app.use("/api/admin", createAdminRoutes(adminController));
+  app.use("/api/admin", searchTransactionById(transactionController));
 
   //transaction controller
   app.use("/api/user", createTransaction(transactionController));

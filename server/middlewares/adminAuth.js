@@ -4,8 +4,7 @@ const { verifyToken } = require("../utils/jwt");
 
 const authenticateAdmin = async (req, res, next) => {
   try {
-    const token = req.header("Authorization")?.replace("Bearer ", "");
-
+    const token = req.headers.authorization
     if (!token) {
       return errorResponse(res, "Access token is required", 401);
     }
