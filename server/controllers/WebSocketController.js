@@ -27,7 +27,6 @@ class WebSocketController {
 
   async handlePlaceBet(socket, data) {
     try {
-
       // Parse the JSON string
       let parsedData;
       if (typeof data === "string") {
@@ -59,7 +58,17 @@ class WebSocketController {
 
   async handleGetUserBalance(socket, data) {
     try {
-      const balance = await this.bettingService.getUserBalance(data.userId);
+
+      let parsedData;
+      if (typeof data === "string") {
+        parsedData = JSON.parse(data);
+        console.log("Successfully parsed JSON");
+      } else {
+        parsedData = data;
+        console.log("Data is already an object");
+      }
+
+      const balance = await this.bettingService.getUserBalance(parsedData.userId);
       socket.emit("userBalance", {
         balance,
       });
@@ -70,10 +79,20 @@ class WebSocketController {
 
   handleGetCurrentBet(socket, data) {
     try {
-      const playerId = socket.playerId;
+
+      let parsedData;
+      if (typeof data === "string") {
+        parsedData = JSON.parse(data);
+        console.log("Successfully parsed JSON");
+      } else {
+        parsedData = data;
+        console.log("Data is already an object");
+      }
+
+      const playerId = parsedData.userId;
       if (playerId && this.gameService.gameState.bets.has(playerId)) {
-        const playerBets = this.gameService.gameState.bets.get(playerId);
-        const currentBet = playerBets.length > 0 ? playerBets[0] : null;
+        const currentBet = this.gameService.gameState.bets.get(playerId);
+        // const currentBet = playerBets.length > 0 ? playerBets[0] : null;
 
         socket.emit("currentBet", {
           bet: currentBet,
