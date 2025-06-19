@@ -23,11 +23,11 @@ class WebSocketController {
 
   async handlePlaceBet(socket, data) {
     try {
-      console.log('received data', JSON.stringify(data.userId))
+      console.log('received data', data)
       // const playerId = socket.playerId || `player_${Date.now()}_${Math.random()}`;
       // socket.playerId = playerId;
 
-      const playerId = data.userId
+      const playerId = await data.userId
       
       // Player can only bet on one type at a time - this will replace any existing bet
       this.gameService.addBet(playerId, data.bet);
