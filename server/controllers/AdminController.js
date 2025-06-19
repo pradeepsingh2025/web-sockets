@@ -46,7 +46,7 @@ class AdminController {
         errorResponse(res, "admin name and password are required", 400);
       }
 
-      const admin = Admin.findOne({ adminName });
+      const admin = await Admin.findOne({ adminName });
       if (!admin) {
         errorResponse(res, "admin not found", 404);
       }

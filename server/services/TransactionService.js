@@ -2,14 +2,18 @@ const Transaction = require("../models/Transaction");
 const TransactionHistory = require("../models/TransactionHistory");
 const User = require("../models/User");
 const NotificationService = require("./NotificationService");
+const { generateOrderId } = require("../utils/Helpers");
 
 class TransactionService {
   static async createDeposit(userId, amount, utrNumber, metadata = {}) {
     try {
-      const user = await User.findById(userId);
+      const user = await User.findOne({ userId });
       if (!user) throw new Error("User not found");
 
+      const orderId = generateOrderId("DEPOSIT");
+
       const transaction = new Transaction({
+        orderId,
         userId,
         type: "DEPOSIT",
         amount,
@@ -38,14 +42,17 @@ class TransactionService {
 
   static async createWithdrawal(userId, amount, upiId, metadata = {}) {
     try {
-      const user = await User.findById(userId);
+      const user = await User.findOne({ userId });
       if (!user) throw new Error("User not found");
 
       if (user.wallet.balance < amount) {
         throw new Error("Insufficient wallet balance");
       }
 
+      const orderId = generateOrderId("WITHDRAWAL");
+
       const transaction = new Transaction({
+        orderId,
         userId,
         type: "WITHDRAWAL",
         amount,
@@ -166,29 +173,23 @@ class TransactionService {
     return history;
   }
 
-  static async getUserTransactions(
-    userId,
-    page = 1,
-    limit = 10,
-    status = null
-  ) {
-    const query = { userId };
-    if (status) query.status = status;
+  static async getUserTransactions(userId) {
+    try {
+      const transactions = await Transaction.find({userId}).sort({
+        createdAt: -1,
+      });
 
-    const transactions = await Transaction.find(query)
-      .sort({ createdAt: -1 })
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .populate("adminId", "name email");
+      if (!transactions) throw new Error("no transactions found");
 
-    const total = await Transaction.countDocuments(query);
+      const total = await Transaction.countDocuments({userId});
 
-    return {
-      transactions,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-      total,
-    };
+      return {
+        transactions,
+        total,
+      };
+    } catch (error) {
+      throw new Error("error fetching user transactions");
+    }
   }
 
   static async getPendingTransactions(type = null, page = 1, limit = 10) {

@@ -12,7 +12,7 @@ class TransactionController {
       }
 
       const { amount, utrNumber } = req.body;
-      const userId = req.user.id;
+      const userId = req.user.userId;
       
       const metadata = {
         ipAddress: req.ip,
@@ -42,7 +42,7 @@ class TransactionController {
       }
 
       const { amount, upiId } = req.body;
-      const userId = req.user.id;
+      const userId = req.user.userId;
       
       const metadata = {
         ipAddress: req.ip,
@@ -66,10 +66,9 @@ class TransactionController {
 
   async getUserTransactions(req, res) {
     try {
-      const userId = req.user.id;
-      const { page = 1, limit = 10, status } = req.query;
+      const userId = req.user.userId;
 
-      const result = await TransactionService.getUserTransactions(userId, page, limit, status);
+      const result = await TransactionService.getUserTransactions(userId);
       
       return successResponse(res, 'Transactions fetched successfully', result);
     } catch (error) {

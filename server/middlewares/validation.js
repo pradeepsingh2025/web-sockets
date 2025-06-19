@@ -20,7 +20,6 @@ const transactionValidation = {
   
   withdrawal: [
     body('amount').isFloat({ min: 100, max: 3000 }).withMessage('Amount must be between 100-3000'),
-    body('upiId').matches(/^[\w.-]+@[\w.-]+$/).withMessage('Invalid UPI ID format')
   ],
   
   adminAction: [

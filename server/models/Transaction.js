@@ -9,7 +9,7 @@ const transactionSchema = new mongoose.Schema(
       index: true,
     },
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "User",
       required: true,
       index: true,
@@ -22,7 +22,6 @@ const transactionSchema = new mongoose.Schema(
     amount: {
       type: Number,
       required: true,
-      min: [1, "Amount must be greater than 0"],
     },
     status: {
       type: String,
@@ -85,21 +84,14 @@ const transactionSchema = new mongoose.Schema(
 );
 
 transactionSchema.pre("save", async function (next) {
-  if (this.isNew && !this.orderId) {
-    const prefix = this.type === "DEPOSIT" ? "DEP" : "WTH";
-    const timestamp = Date.now().toString().slice(-8);
-    const random = Math.random().toString(36).substr(2, 4).toUpperCase();
-    this.orderId = `${prefix}${timestamp}${random}`;
-  }
-
-  if (this.isModified('status')) {
-    if (this.status === 'PROCESSING') {
+  if (this.isModified("status")) {
+    if (this.status === "PROCESSING") {
       this.processedAt = new Date();
-    } else if (this.status === 'COMPLETED') {
+    } else if (this.status === "COMPLETED") {
       this.completedAt = new Date();
     }
   }
-  
+
   next();
 });
 
@@ -107,4 +99,4 @@ transactionSchema.index({ userId: 1, createdAt: -1 });
 transactionSchema.index({ status: 1, type: 1 });
 transactionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-module.exports = mongoose.model('Transaction', transactionSchema);
+module.exports = mongoose.model("Transaction", transactionSchema);
