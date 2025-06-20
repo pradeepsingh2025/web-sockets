@@ -52,6 +52,7 @@ class UserInfoController {
         token,
         user: {
           id: user._id,
+          userId: user.userId,
           phone: user.phone,
           createdAt: user.createdAt,
         },
@@ -94,7 +95,9 @@ class UserInfoController {
       // Find user
       const user = await User.findOne({ phone });
       if (!user) {
-        return errorResponse(res, "User not found", 404);
+        return res.status(404).json({
+          error: "User not found"
+        });
       }
 
       // Check password
@@ -113,7 +116,9 @@ class UserInfoController {
         user,
       });
     } catch (error) {
-      return errorResponse(res, error.message, 500);
+      return res.status(500).json({
+        error: 'Internal server error'
+      })
     }
   }
 

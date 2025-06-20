@@ -5,8 +5,8 @@ const { GameService, BettingService } = require('../services');
 function setupWebSocket(server) {
   const io = new Server(server, {
     cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
+      origin: "http://localhost:5173/",
+      methods: ["GET", "POST", "PUT"]
     }
   });
   
