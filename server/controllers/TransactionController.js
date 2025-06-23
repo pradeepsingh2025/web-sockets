@@ -1,34 +1,45 @@
-const TransactionService = require('../services/TransactionService');
-const { validationResult } = require('express-validator');
-const { successResponse, errorResponse } = require('../utils/Helpers');
-const Transaction = require("../models/Transaction")
+const TransactionService = require("../services/TransactionService");
+const { validationResult } = require("express-validator");
+const { successResponse, errorResponse } = require("../utils/Helpers");
+const Transaction = require("../models/Transaction");
 
 class TransactionController {
-    async createDeposit(req, res) {
+  async createDeposit(req, res) {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return errorResponse(res, 'Validation errors', 400, errors.array());
+        return errorResponse(res, "Validation errors", 400, errors.array());
       }
 
-      const { amount, utrNumber } = req.body;
+      const { amount, utrNumber, channel } = req.body;
       const userId = req.user.userId;
-      
+
       const metadata = {
         ipAddress: req.ip,
-        userAgent: req.get('User-Agent')
+        userAgent: req.get("User-Agent"),
       };
 
-      const transaction = await TransactionService.createDeposit(userId, amount, utrNumber, metadata);
-      
-      return successResponse(res, 'Deposit request created successfully', {
-        transaction: {
-          orderId: transaction.orderId,
-          amount: transaction.amount,
-          status: transaction.status,
-          createdAt: transaction.createdAt
-        }
-      }, 201);
+      const transaction = await TransactionService.createDeposit(
+        userId,
+        amount,
+        utrNumber,
+        channel,
+        metadata
+      );
+
+      return successResponse(
+        res,
+        "Deposit request created successfully",
+        {
+          transaction: {
+            orderId: transaction.orderId,
+            amount: transaction.amount,
+            status: transaction.status,
+            createdAt: transaction.createdAt,
+          },
+        },
+        201
+      );
     } catch (error) {
       return errorResponse(res, error.message, 400);
     }
@@ -38,27 +49,37 @@ class TransactionController {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return errorResponse(res, 'Validation errors', 400, errors.array());
+        return errorResponse(res, "Validation errors", 400, errors.array());
       }
 
       const { amount, upiId } = req.body;
       const userId = req.user.userId;
-      
+
       const metadata = {
         ipAddress: req.ip,
-        userAgent: req.get('User-Agent')
+        userAgent: req.get("User-Agent"),
       };
 
-      const transaction = await TransactionService.createWithdrawal(userId, amount, upiId, metadata);
-      
-      return successResponse(res, 'Withdrawal request created successfully', {
-        transaction: {
-          orderId: transaction.orderId,
-          amount: transaction.amount,
-          status: transaction.status,
-          createdAt: transaction.createdAt
-        }
-      }, 201);
+      const transaction = await TransactionService.createWithdrawal(
+        userId,
+        amount,
+        upiId,
+        metadata
+      );
+
+      return successResponse(
+        res,
+        "Withdrawal request created successfully",
+        {
+          transaction: {
+            orderId: transaction.orderId,
+            amount: transaction.amount,
+            status: transaction.status,
+            createdAt: transaction.createdAt,
+          },
+        },
+        201
+      );
     } catch (error) {
       return errorResponse(res, error.message, 400);
     }
@@ -69,8 +90,8 @@ class TransactionController {
       const userId = req.user.userId;
 
       const result = await TransactionService.getUserTransactions(userId);
-      
-      return successResponse(res, 'Transactions fetched successfully', result);
+
+      return successResponse(res, "Transactions fetched successfully", result);
     } catch (error) {
       return errorResponse(res, error.message, 500);
     }
@@ -81,18 +102,22 @@ class TransactionController {
       const { orderId } = req.params;
       const userId = req.user.id;
 
-      const transaction = await Transaction.findOne({ orderId, userId })
-        .populate('adminId', 'name email');
+      const transaction = await Transaction.findOne({
+        orderId,
+        userId,
+      }).populate("adminId", "name email");
 
       if (!transaction) {
-        return errorResponse(res, 'Transaction not found', 404);
+        return errorResponse(res, "Transaction not found", 404);
       }
 
-      return successResponse(res, 'Transaction details fetched successfully', { transaction });
+      return successResponse(res, "Transaction details fetched successfully", {
+        transaction,
+      });
     } catch (error) {
       return errorResponse(res, error.message, 500);
     }
   }
 }
 
-module.exports = TransactionController
+module.exports = TransactionController;

@@ -5,7 +5,7 @@ const NotificationService = require("./NotificationService");
 const { generateOrderId } = require("../utils/Helpers");
 
 class TransactionService {
-  static async createDeposit(userId, amount, utrNumber, metadata = {}) {
+  static async createDeposit(userId, amount, utrNumber, channel, metadata = {}) {
     try {
       const user = await User.findOne({ userId });
       if (!user) throw new Error("User not found");
@@ -18,6 +18,7 @@ class TransactionService {
         type: "DEPOSIT",
         amount,
         utrNumber,
+        channel,
         status: "PENDING",
       });
 
@@ -163,6 +164,7 @@ class TransactionService {
       balanceBefore: currentBalance,
       balanceAfter: currentBalance,
       metadata: {
+        channel: transaction.channel,
         utrNumber: transaction.utrNumber,
         upiId: transaction.upiId,
         ...metadata,
