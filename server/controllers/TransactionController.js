@@ -29,15 +29,16 @@ class TransactionController {
 
       return successResponse(
         res,
-        "Deposit request created successfully",
-        {
-          transaction: {
-            orderId: transaction.orderId,
-            amount: transaction.amount,
-            status: transaction.status,
-            createdAt: transaction.createdAt,
-          },
-        },
+        `Deposit request created successfully, please wait if you deposited money, it will be
+        added in your wallet as soon as possible. Thank you!`,
+        // {
+        //   transaction: {
+        //     orderId: transaction.orderId,
+        //     amount: transaction.amount,
+        //     status: transaction.status,
+        //     createdAt: transaction.createdAt,
+        //   },
+        // },
         201
       );
     } catch (error) {
