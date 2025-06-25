@@ -100,13 +100,21 @@ class TransactionController {
 
   async getTransactionDetails(req, res) {
     try {
-      const { orderId } = req.params;
-      const userId = req.user.id;
+      const { orderId, userId } = req.query;
 
-      const transaction = await Transaction.findOne({
-        orderId,
-        userId,
-      }).populate("adminId", "name email");
+      const query = {};
+      if (orderId) query.orderId = orderId;
+      if (userId) query.userId = userId;
+
+      if (Object.keys(query).length === 0) {
+        return errorResponse(
+          res,
+          "At least orderId or userId is required",
+          400
+        );
+      }
+
+      const transaction = await Transaction.findOne(query);
 
       if (!transaction) {
         return errorResponse(res, "Transaction not found", 404);

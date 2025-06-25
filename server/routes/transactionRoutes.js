@@ -34,7 +34,7 @@ function createTransaction(transactionController) {
 
 function searchTransactionById(transactionController) {
   router.get(
-    "/:orderId",
+    "/specific",
     authenticateAdmin,
     transactionController.getTransactionDetails
   );

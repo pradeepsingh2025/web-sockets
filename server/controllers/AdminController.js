@@ -2,7 +2,7 @@ const TransactionService = require("../services/TransactionService");
 const Transaction = require("../models/Transaction");
 const Admin = require("../models/Admin");
 const { successResponse, errorResponse } = require("../utils/Helpers");
-const { generateToken } = require("../utils/jwt");
+const { generateTokenForAdmin } = require("../utils/jwt");
 
 class AdminController {
   //admin creation
@@ -57,10 +57,10 @@ class AdminController {
       }
 
       // Generate JWT token
-      const token = generateToken(admin.adminName);
+      const admin_token = generateTokenForAdmin(admin.adminName, admin.role);
 
       return successResponse(res, "Admin logged in successfully", {
-        token,
+        admin_token,
         admin,
       });
     } catch (error) {
@@ -169,6 +169,35 @@ class AdminController {
 
       return successResponse(res, "Transaction stats fetched successfully", {
         stats,
+      });
+    } catch (error) {
+      return errorResponse(res, error.message, 500);
+    }
+  }
+
+  // GET /api/admin/transactions?page=1&limit=10
+  async getAllTransactions(req, res) {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = (page - 1) * limit;
+
+      const [transactions, total] = await Promise.all([
+        Transaction.find()
+          .sort({ createdAt: -1 }) // newest first
+          .skip(skip)
+          .limit(limit),
+        Transaction.countDocuments(),
+      ]);
+
+      return successResponse(res, "Transactions fetched", {
+        transactions,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
       });
     } catch (error) {
       return errorResponse(res, error.message, 500);

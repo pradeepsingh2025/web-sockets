@@ -36,6 +36,13 @@ function createAdminRoutes(adminController) {
   router.post("/login", adminController.getAdmin);
 
   router.get(
+    "/alltransactions",
+    authenticateAdmin,
+    requirePermission("VIEW_TRANSACTIONS"),
+    adminController.getAllTransactions
+  );
+
+  router.get(
     "/transactions/pending",
     authenticateAdmin,
     requirePermission("VIEW_TRANSACTIONS"),

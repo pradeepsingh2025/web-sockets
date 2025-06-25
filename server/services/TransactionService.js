@@ -5,7 +5,13 @@ const NotificationService = require("./NotificationService");
 const { generateOrderId } = require("../utils/Helpers");
 
 class TransactionService {
-  static async createDeposit(userId, amount, utrNumber, channel, metadata = {}) {
+  static async createDeposit(
+    userId,
+    amount,
+    utrNumber,
+    channel,
+    metadata = {}
+  ) {
     try {
       const user = await User.findOne({ userId });
       if (!user) throw new Error("User not found");
@@ -177,14 +183,14 @@ class TransactionService {
 
   static async getUserTransactions(userId) {
     try {
-      const transactions = await Transaction.find({userId}).sort({
+      const transactions = await Transaction.find({ userId }).sort({
         createdAt: -1,
       });
 
       if (!transactions) throw new Error("no transactions found");
 
       return {
-        transactions
+        transactions,
       };
     } catch (error) {
       throw new Error("error fetching user transactions");
@@ -198,10 +204,11 @@ class TransactionService {
     const transactions = await Transaction.find(query)
       .sort({ createdAt: 1 })
       .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .skip((page - 1) * limit);
 
     return transactions;
   }
+  
 }
 
 module.exports = TransactionService;
