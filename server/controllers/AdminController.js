@@ -48,8 +48,10 @@ class AdminController {
 
       const admin = await Admin.findOne({ adminName });
       if (!admin) {
-        errorResponse(res, "admin not found", 404);
+        return errorResponse(res, "admin not found", 404);
       }
+      console.log(admin.adminName);
+      console.log(admin.role);
 
       const isPasswordCorrect = await admin.comparePassword(password);
       if (!isPasswordCorrect) {
@@ -59,10 +61,17 @@ class AdminController {
       // Generate JWT token
       const admin_token = generateTokenForAdmin(admin.adminName, admin.role);
 
-      return successResponse(res, "Admin logged in successfully", {
-        admin_token,
-        admin,
-      });
+      // res.cookie("adminToken", admin_token, {
+      //   httpOnly: true,
+      //   secure: process.env.NODE_ENV === "production",
+      //   sameSite: "strict",
+      //   path: "/",
+      //   maxAge: 60 * 60 * 1000,
+      // });
+
+      return successResponse(res, "Succesfully logged in as Admin",{
+        token : admin_token
+      }, 201);
     } catch (error) {
       return errorResponse(res, error.message, 500);
     }

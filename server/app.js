@@ -14,7 +14,7 @@ const {
   UserInfoController,
   WalletController,
   AdminController,
-  TransactionController
+  TransactionController,
 } = require("./controllers");
 
 class App {
@@ -54,7 +54,7 @@ class App {
       userInfoController: this.userInfoController,
       walletController: this.walletController,
       adminController: this.adminController,
-      transactionController: this.transactionController
+      transactionController: this.transactionController,
     });
   }
 
