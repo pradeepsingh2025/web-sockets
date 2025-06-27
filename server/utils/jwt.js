@@ -12,8 +12,8 @@ const verifyToken = (token) => {
   return jwt.verify(token, JWT_SECRET);
 };
 
-const generateTokenForAdmin = (adminName, role) =>{
-  return jwt.sign({adminName, role}, ADMIN_JWT_SECRET, {expiresIn: '1h'})
+const generateTokenForAdmin = (payload) =>{
+  return jwt.sign(payload, ADMIN_JWT_SECRET, {expiresIn: '1d'})
 }
 const verifyTokenForAdmin = (admin_token)=>{
   return jwt.verify(admin_token, ADMIN_JWT_SECRET)

@@ -59,19 +59,21 @@ class AdminController {
       }
 
       // Generate JWT token
-      const admin_token = generateTokenForAdmin(admin.adminName, admin.role);
+      const payload = {
+        adminName: admin.adminName,
+        role: admin.role,
+      };
+      const admin_token = generateTokenForAdmin(payload);
+      console.log("admin token gerenated");
 
-      // res.cookie("adminToken", admin_token, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV === "production",
-      //   sameSite: "strict",
-      //   path: "/",
-      //   maxAge: 60 * 60 * 1000,
-      // });
-
-      return successResponse(res, "Succesfully logged in as Admin",{
-        token : admin_token
-      }, 201);
+      return successResponse(
+        res,
+        "Succesfully logged in as Admin",
+        {
+          token: admin_token,
+        },
+        201
+      );
     } catch (error) {
       return errorResponse(res, error.message, 500);
     }
@@ -99,7 +101,7 @@ class AdminController {
     try {
       const { transactionId } = req.params;
       const { remarks } = req.body;
-      const adminId = req.admin.id;
+      const adminId = req.admin._id;
 
       const transaction = await TransactionService.approveTransaction(
         transactionId,
@@ -119,15 +121,20 @@ class AdminController {
     try {
       const { transactionId } = req.params;
       const { paymentDetails } = req.body;
-      const adminId = req.admin.id;
+      console.log("checking paymentDetails", paymentDetails);
+      const adminId = req.admin._id;
 
-      const result = await TransactionService.completeTransaction(
+      const transaction = await TransactionService.completeTransaction(
         transactionId,
         adminId,
         paymentDetails
       );
+      console.log("checking")
+      console.log(transaction)
 
-      return successResponse(res, "Transaction completed successfully", result);
+      return successResponse(res, "Transaction completed successfully", {
+        transaction,
+      });
     } catch (error) {
       return errorResponse(res, error.message, 400);
     }
@@ -137,7 +144,7 @@ class AdminController {
     try {
       const { transactionId } = req.params;
       const { reason } = req.body;
-      const adminId = req.admin.id;
+      const adminId = req.admin._id;
 
       const transaction = await TransactionService.rejectTransaction(
         transactionId,

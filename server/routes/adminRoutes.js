@@ -23,11 +23,11 @@ const rejectValidation = [
     .withMessage("Reason must be between 10-500 characters"),
 ];
 
-const completeValidation = [
-  body("paymentDetails").optional().isObject(),
-  body("paymentDetails.transactionId").optional().notEmpty(),
-  body("paymentDetails.gateway").optional().notEmpty(),
-];
+// const completeValidation = [
+//   body("paymentDetails").optional().isObject(),
+//   body("paymentDetails.transactionId").optional().notEmpty(),
+//   body("paymentDetails.gateway").optional().notEmpty(),
+// ];
 
 function createAdminRoutes(adminController) {
   // Routes
@@ -59,7 +59,6 @@ function createAdminRoutes(adminController) {
     "/transactions/:transactionId/complete",
     authenticateAdmin,
     requirePermission("APPROVE_DEPOSITS"),
-    completeValidation,
     adminController.completeTransaction
   );
   router.put(

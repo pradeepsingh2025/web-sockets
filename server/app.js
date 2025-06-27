@@ -28,7 +28,13 @@ class App {
   }
 
   setupMiddleware() {
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: "http://localhost:5173",
+        credentials: true, // Allow cookies or auth headers
+        methods: ["GET", "POST", "PUT"],
+      })
+    );
     this.app.use(express.json());
   }
 
