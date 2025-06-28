@@ -153,45 +153,6 @@ class TransactionService {
     }
   }
 
-  static async completeTransaction(transactionId, adminId, paymentDetails) {
-    
-    try {
-      const transaction = await Transaction.findById(transactionId);
-      console.log("tran service", transaction)
-      if (!transaction) throw new Error("Transaction not found");
-      
-      transaction.status = "COMPLETED";
-      transaction.adminId = adminId;
-      transaction.adminAction = {
-        actionType: "COMPLETED",
-        actionDate: new Date(),
-        remarks: paymentDetails,
-      };
-
-      console.log("just check")
-
-      await transaction.save();
-       
-      console.log("after saving trns", transaction)
-      // Update history
-      await TransactionHistory.updateMany(
-        { transactionId },
-        { tag: "COMPLETED" }
-      );
-
-      // Notify user
-      await NotificationService.notifyUserTransactionCompleted(
-        transaction,
-        paymentDetails
-      );
-
-      return transaction;
-    } catch (error) {
-      throw new Error(`${error}`);
-      
-    }
-  }
-
   static async addToHistory(
     transaction,
     description,

@@ -70,15 +70,15 @@ class TransactionController {
 
       return successResponse(
         res,
-        "Withdrawal request created successfully",
-        {
-          transaction: {
-            orderId: transaction.orderId,
-            amount: transaction.amount,
-            status: transaction.status,
-            createdAt: transaction.createdAt,
-          },
-        },
+        "Withdrawal Request Created Successfully",
+        // {
+        //   transaction: {
+        //     orderId: transaction.orderId,
+        //     amount: transaction.amount,
+        //     status: transaction.status,
+        //     createdAt: transaction.createdAt,
+        //   },
+        // },
         201
       );
     } catch (error) {

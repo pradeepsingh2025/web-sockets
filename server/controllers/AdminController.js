@@ -1,4 +1,6 @@
 const TransactionService = require("../services/TransactionService");
+const WalletService = require("../services/WalletService");
+const NotificationService = require("../services/NotificationService");
 const Transaction = require("../models/Transaction");
 const Admin = require("../models/Admin");
 const { successResponse, errorResponse } = require("../utils/Helpers");
@@ -121,21 +123,27 @@ class AdminController {
     try {
       const { transactionId } = req.params;
       const { paymentDetails } = req.body;
-      console.log("checking paymentDetails", paymentDetails);
       const adminId = req.admin._id;
 
-      const transaction = await TransactionService.completeTransaction(
+      console.log("check1");
+
+      const transaction = await WalletService.processTransaction(
         transactionId,
         adminId,
         paymentDetails
       );
-      console.log("checking")
-      console.log(transaction)
+      console.log("new transaction check", transaction);
+      // Notify user
+      await NotificationService.notifyUserTransactionCompleted(
+        transaction,
+        paymentDetails
+      );
 
       return successResponse(res, "Transaction completed successfully", {
         transaction,
       });
     } catch (error) {
+      console.log(error.message);
       return errorResponse(res, error.message, 400);
     }
   }

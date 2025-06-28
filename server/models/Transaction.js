@@ -39,7 +39,7 @@ const transactionSchema = new mongoose.Schema(
         message: "UTR number is required for deposits",
       },
     },
-    channel: {type: String, required: [true, 'Channel is required to transaction']},
+    channel: {type: String},
     upiId: {
       type: String,
       trim: true,
