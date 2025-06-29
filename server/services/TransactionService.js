@@ -108,7 +108,7 @@ class TransactionService {
       // Update history
       await TransactionHistory.updateMany(
         { transactionId },
-        { tag: "PROCESSING_PAYMENT" }
+        { status: "PROCESSING", tag: "PROCESSING_PAYMENT" }
       );
 
       // Notify user
@@ -138,7 +138,7 @@ class TransactionService {
       // Update history
       await TransactionHistory.updateMany(
         { transactionId },
-        { tag: "REJECTED" }
+        { status: "REJECTED", tag: "REJECTED" }
       );
 
       // Notify user

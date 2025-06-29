@@ -67,6 +67,7 @@ class WalletService {
       await TransactionHistory.updateMany(
         { transactionId },
         {
+          status: "COMPLETED",
           tag: "COMPLETED",
           balanceBefore,
           balanceAfter,
