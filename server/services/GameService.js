@@ -144,7 +144,7 @@ class GameService {
         if (bet.value === result.number) multiplier = 9;
         break;
       case "size":
-        if (bet.value === result.size) multiplier = 1.8;
+        if (bet.value === result.size) multiplier = 2;
         break;
     }
 
