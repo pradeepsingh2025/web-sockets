@@ -180,6 +180,8 @@ class WebSocketController {
   }
 
   startNewRound(gameType) {
+
+    //newState = {phase, timeRemaining, round, lastResult}
     const newState = this.gameService.startNewRound(gameType);
 
     this.broadcast("newRound", {
