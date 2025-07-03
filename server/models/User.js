@@ -64,7 +64,8 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
 
 // Instance methods
 UserSchema.methods.updateBalance = function (amount) {
-  this.balance += amount;
+  this.wallet.balance += amount;
+  this.wallet.lastUpdated = new Date();
   this.lastActive = new Date();
   return this.save();
 };

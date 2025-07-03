@@ -37,7 +37,7 @@ class WebSocketController {
         console.log("Successfully parsed JSON");
       } else {
         parsedData = data;
-        console.log("Data is already an object");
+        console.log("Data is already an object", parsedData);
       }
 
       const playerId = parsedData.userId;
@@ -69,7 +69,6 @@ class WebSocketController {
         console.log("Successfully parsed JSON");
       } else {
         parsedData = data;
-        console.log("Data is already an object");
       }
 
       const balance = await this.bettingService.getUserBalance(
@@ -91,7 +90,6 @@ class WebSocketController {
         console.log("Successfully parsed JSON");
       } else {
         parsedData = data;
-        console.log("Data is already an object");
       }
 
       const playerId = parsedData.userId;

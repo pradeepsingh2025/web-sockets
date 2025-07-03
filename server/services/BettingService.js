@@ -25,18 +25,26 @@ class BettingService {
   async updateUserBalance(playerId, betAmount, winAmount = 0) {
     const balanceChange = winAmount > 0 ? winAmount - betAmount : -betAmount;
 
-    await User.findOneAndUpdate(
-      { userId: playerId },
-      {
-        $inc: {
-          balance: balanceChange,
-          totalBets: betAmount,
-          totalWins: winAmount > 0 ? winAmount : 0,
+    try {
+      await User.findOneAndUpdate(
+        { userId: playerId },
+        {
+          $inc: {
+            "wallet.balance": balanceChange,
+            totalBets: betAmount,
+            totalWins: winAmount > 0 ? winAmount : 0,
+          },
+          $set: {
+            "wallet.lastUpdated": new Date(),
+            lastActive: new Date(),
+          },
         },
-        lastActive: new Date(),
-      },
-      { upsert: true }
-    );
+        { upsert: true }
+      );
+    } catch (error) {
+      console.error("Failed to update user balance:", error);
+      throw error;
+    }
   }
 
   async processWinnings(bets) {
