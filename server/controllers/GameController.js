@@ -8,7 +8,8 @@ class GameController {
   async getGameHistory(req, res) {
     try {
       const limit = parseInt(req.query.limit) || 50;
-      const history = await GameResult.getRecentHistory(limit);
+      const gameType = req.query.gameType
+      const history = await GameResult.getRecentHistory(gameType, limit);
       res.json(history);
     } catch (error) {
       console.error('Error fetching game history:', error);

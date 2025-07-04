@@ -28,11 +28,11 @@ const GameResultSchema = new mongoose.Schema(
 GameResultSchema.index({ createdAt: -1 });
 
 // Static methods
-GameResultSchema.statics.getRecentHistory = function (limit = 50) {
-  return this.find()
+GameResultSchema.statics.getRecentHistory = function (gameType, limit = 50) {
+  return this.find({gameType: gameType})
     .sort({ createdAt: -1 })
     .limit(limit)
-    .select("gameType round result createdAt");
+    .select("gameType round result");
 };
 
 GameResultSchema.statics.getGameStats = function () {

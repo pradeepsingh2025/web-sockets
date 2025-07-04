@@ -84,7 +84,7 @@ class GameService {
 
   async endBettingPhase(gameType) {
     this.games[gameType].phase = "result";
-    this.games[gameType].timeRemaining = 3;
+    this.games[gameType].timeRemaining = 5;
 
     const result = this.generateGameResult();
     this.games[gameType].lastResult = result;

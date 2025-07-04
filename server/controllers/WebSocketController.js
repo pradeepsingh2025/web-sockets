@@ -20,9 +20,9 @@ class WebSocketController {
     socket.on("getUserBalance", (data) =>
       this.handleGetUserBalance(socket, data)
     );
-    socket.on("getCurrentBet", (data) =>
-      this.handleGetCurrentBet(socket, data)
-    );
+    // socket.on("getCurrentBet", (data) =>
+    //   this.handleGetCurrentBet(socket, data)
+    // );
 
     socket.on("disconnect", () => this.handleDisconnection(socket));
     socket.on("error", (error) => this.handleError(socket, error));
@@ -82,36 +82,36 @@ class WebSocketController {
     }
   }
 
-  handleGetCurrentBet(socket, data) {
-    try {
-      let parsedData;
-      if (typeof data === "string") {
-        parsedData = JSON.parse(data);
-        console.log("Successfully parsed JSON");
-      } else {
-        parsedData = data;
-      }
+  // handleGetCurrentBet(socket, data) {
+  //   try {
+  //     let parsedData;
+  //     if (typeof data === "string") {
+  //       parsedData = JSON.parse(data);
+  //       console.log("Successfully parsed JSON");
+  //     } else {
+  //       parsedData = data;
+  //     }
 
-      const playerId = parsedData.userId;
-      const gameType = parsedData.gameType;
-      if (playerId && this.gameService.activePlayers.has(playerId)) {
-        const currentBet = this.gameService.games[gameType].bets.get(playerId);
-        // const currentBet = playerBets.length > 0 ? playerBets[0] : null;
+  //     const playerId = parsedData.userId;
+  //     const gameType = parsedData.gameType;
+  //     if (playerId && this.gameService.activePlayers.has(playerId)) {
+  //       const currentBet = this.gameService.games[gameType].bets.get(playerId);
+  //       // const currentBet = playerBets.length > 0 ? playerBets[0] : null;
 
-        socket.emit("currentBet", {
-          gameType: gameType,
-          bet: currentBet,
-        });
-      } else {
-        socket.emit("currentBet", {
-          gametype: null,
-          bet: null,
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching current bet:", error);
-    }
-  }
+  //       socket.emit("currentBet", {
+  //         gameType: gameType,
+  //         bet: currentBet,
+  //       });
+  //     } else {
+  //       socket.emit("currentBet", {
+  //         gametype: null,
+  //         bet: null,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching current bet:", error);
+  //   }
+  // }
 
   handleDisconnection(socket) {
     console.log("Client disconnected:", socket.id);
