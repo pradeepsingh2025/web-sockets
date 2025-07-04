@@ -116,8 +116,8 @@ class GameService {
         allBets.push({
           playerId,
           betType: bet.type,
-          betValue: bet.value,
-          amount: bet.amount,
+          betValue: bet.selection,
+          amount: bet.totalAmount,
           won,
           winAmount: won ? winAmount : 0,
         });
@@ -138,17 +138,17 @@ class GameService {
 
     switch (bet.type) {
       case "color":
-        if (bet.value === result.color) multiplier = 2;
+        if (bet.selection === result.color) multiplier = 2;
         break;
       case "number":
-        if (bet.value === result.number) multiplier = 9;
+        if (bet.selection === result.number) multiplier = 9;
         break;
       case "size":
-        if (bet.value === result.size) multiplier = 2;
+        if (bet.selection === result.size) multiplier = 2;
         break;
     }
 
-    return bet.amount * multiplier;
+    return bet.totalAmount * multiplier;
   }
 
   startNewRound(gameType) {
