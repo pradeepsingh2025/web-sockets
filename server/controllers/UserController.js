@@ -15,7 +15,6 @@ class UserController {
       res.status(500).json({ error: "Failed to fetch user stats" });
     }
   }
-
 }
 
 module.exports = UserController;

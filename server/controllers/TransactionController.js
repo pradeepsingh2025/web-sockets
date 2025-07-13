@@ -31,14 +31,6 @@ class TransactionController {
         res,
         `Deposit request created successfully, please wait if you deposited money, it will be
         added in your wallet as soon as possible. Thank you!`,
-        // {
-        //   transaction: {
-        //     orderId: transaction.orderId,
-        //     amount: transaction.amount,
-        //     status: transaction.status,
-        //     createdAt: transaction.createdAt,
-        //   },
-        // },
         201
       );
     } catch (error) {
@@ -71,14 +63,6 @@ class TransactionController {
       return successResponse(
         res,
         "Withdrawal Request Created Successfully",
-        // {
-        //   transaction: {
-        //     orderId: transaction.orderId,
-        //     amount: transaction.amount,
-        //     status: transaction.status,
-        //     createdAt: transaction.createdAt,
-        //   },
-        // },
         201
       );
     } catch (error) {

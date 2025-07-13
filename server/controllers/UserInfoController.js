@@ -160,8 +160,4 @@ class UserInfoController {
   }
 }
 
-// async function createUser(req, res) {}
-
-// const getUser = async (req, res) => {};
-
 module.exports = UserInfoController;
